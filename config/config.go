@@ -8,6 +8,7 @@ import (
 	"github.com/LYY/crypt/backend"
 	"github.com/LYY/crypt/backend/consul"
 	"github.com/LYY/crypt/backend/etcd"
+	"github.com/LYY/crypt/backend/etcdv3"
 	"github.com/LYY/crypt/encoding/secconf"
 )
 
@@ -49,6 +50,16 @@ func NewConfigManager(client backend.Store, keystore io.Reader) (ConfigManager, 
 // NewStandardEtcdConfigManager returns a new ConfigManager backed by etcd.
 func NewStandardEtcdConfigManager(machines []string) (ConfigManager, error) {
 	store, err := etcd.New(machines)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewStandardConfigManager(store)
+}
+
+// NewStandardEtcdv3ConfigManager returns a new ConfigManager backed by etcd.
+func NewStandardEtcdv3ConfigManager(machines []string) (ConfigManager, error) {
+	store, err := etcdv3.New(machines)
 	if err != nil {
 		return nil, err
 	}
